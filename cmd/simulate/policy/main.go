@@ -6,8 +6,6 @@ import (
 	"time"
 
 	"github.com/lars-sto/adaptive-error-recovery-controller/recovery"
-	"github.com/lars-sto/adaptive-fec-simulation/internal/adapter"
-	"github.com/pion/interceptor/pkg/flexfec"
 )
 
 type nopSink struct{}
@@ -51,32 +49,11 @@ func pickScenario(name string, start time.Time) []recovery.NetworkStats {
 	switch name {
 	case "01_loss_increase":
 		return scenario01IncreasingLoss(start)
-	case "02_loss_threshold":
+	case "02_loss_threshold_oscillation":
 		return scenario02LossAroundEnable(start)
 	case "03_bwe_bottleneck":
 		return scenario03BWEBottleneck(start)
 	default:
 		panic("unknown scenario: " + name)
 	}
-}
-
-func wiring() {
-	bus := adapter.NewRuntimeBus()
-	ffc := adapter.NewFlexFECAdapter(bus)
-
-	// build pion interceptor chain
-	fecFactory, _ := flexfec.NewFecInterceptor(
-		flexfec.WithConfigSource(bus),
-		// defaults are fallback only:
-		flexfec.NumMediaPackets(10),
-		flexfec.NumFECPackets(2),
-	)
-
-	// when you know the mediaSSRC for the outbound stream:
-	sink := adapter.SinkFunc(func(d recovery.PolicyDecision) {
-		ffc.Apply(mediaSSRC, d)
-	})
-
-	eng := recovery.NewEngine(recovery.DefaultConfig(), statsSource, sink, obs)
-	go eng.Run(ctx)
 }

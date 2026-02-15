@@ -1,4 +1,4 @@
-time_ms,loss,rtt,current_bitrate,target_bitrate,fec_enabled,overhead,reason,changed
+time,loss,rtt,current_bitrate,target_bitrate,fec_enabled,overhead,reason,changed
 1770747744020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,FEC enabled: network protection required | adjusted protection factor,true
 1770747745020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,,false
 1770747746020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,,false

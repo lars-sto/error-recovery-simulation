@@ -26,7 +26,7 @@ func NewCSVObserver(path string) (*CSVObserver, error) {
 
 	w := csv.NewWriter(f)
 	if err := w.Write([]string{
-		"time_ms",
+		"time",
 		"loss",
 		"rtt",
 		"current_bitrate",
