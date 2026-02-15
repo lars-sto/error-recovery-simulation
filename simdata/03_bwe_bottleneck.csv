@@ -1,0 +1,91 @@
+time_ms,loss,rtt,current_bitrate,target_bitrate,fec_enabled,overhead,reason,changed
+1770747744020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,FEC enabled: network protection required | adjusted protection factor,true
+1770747745020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,,false
+1770747746020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,,false
+1770747747020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,,false
+1770747748020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,,false
+1770747749020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,,false
+1770747750020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,,false
+1770747751020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,,false
+1770747752020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,,false
+1770747753020,0.0800,200,1000000.0000,1300000.0000,true,0.2360,,false
+1770747754020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth | adjusted protection factor,true
+1770747755020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747756020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747757020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747758020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747759020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747760020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747761020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747762020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747763020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747764020,0.0800,200,1000000.0000,1100000.0000,true,0.1000,BWE cap: reduced FEC to fit bandwidth | adjusted protection factor,true
+1770747765020,0.0800,200,1000000.0000,1100000.0000,true,0.1000,BWE cap: reduced FEC to fit bandwidth,false
+1770747766020,0.0800,200,1000000.0000,1100000.0000,true,0.1000,BWE cap: reduced FEC to fit bandwidth,false
+1770747767020,0.0800,200,1000000.0000,1100000.0000,true,0.1000,BWE cap: reduced FEC to fit bandwidth,false
+1770747768020,0.0800,200,1000000.0000,1100000.0000,true,0.1000,BWE cap: reduced FEC to fit bandwidth,false
+1770747769020,0.0800,200,1000000.0000,1100000.0000,true,0.1000,BWE cap: reduced FEC to fit bandwidth,false
+1770747770020,0.0800,200,1000000.0000,1100000.0000,true,0.1000,BWE cap: reduced FEC to fit bandwidth,false
+1770747771020,0.0800,200,1000000.0000,1100000.0000,true,0.1000,BWE cap: reduced FEC to fit bandwidth,false
+1770747772020,0.0800,200,1000000.0000,1100000.0000,true,0.1000,BWE cap: reduced FEC to fit bandwidth,false
+1770747773020,0.0800,200,1000000.0000,1100000.0000,true,0.1000,BWE cap: reduced FEC to fit bandwidth,false
+1770747774020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth | adjusted protection factor,true
+1770747775020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747776020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747777020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747778020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747779020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747780020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747781020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747782020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747783020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747784020,0.0800,200,1000000.0000,1020000.0000,true,0.0200,BWE cap: reduced FEC to fit bandwidth | adjusted protection factor,true
+1770747785020,0.0800,200,1000000.0000,1020000.0000,true,0.0200,BWE cap: reduced FEC to fit bandwidth,false
+1770747786020,0.0800,200,1000000.0000,1020000.0000,true,0.0200,BWE cap: reduced FEC to fit bandwidth,false
+1770747787020,0.0800,200,1000000.0000,1020000.0000,true,0.0200,BWE cap: reduced FEC to fit bandwidth,false
+1770747788020,0.0800,200,1000000.0000,1020000.0000,true,0.0200,BWE cap: reduced FEC to fit bandwidth,false
+1770747789020,0.0800,200,1000000.0000,1020000.0000,true,0.0200,BWE cap: reduced FEC to fit bandwidth,false
+1770747790020,0.0800,200,1000000.0000,1020000.0000,true,0.0200,BWE cap: reduced FEC to fit bandwidth,false
+1770747791020,0.0800,200,1000000.0000,1020000.0000,true,0.0200,BWE cap: reduced FEC to fit bandwidth,false
+1770747792020,0.0800,200,1000000.0000,1020000.0000,true,0.0200,BWE cap: reduced FEC to fit bandwidth,false
+1770747793020,0.0800,200,1000000.0000,1020000.0000,true,0.0200,BWE cap: reduced FEC to fit bandwidth,false
+1770747794020,0.0800,200,1000000.0000,1000000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth | FEC disabled: stable network,true
+1770747795020,0.0800,200,1000000.0000,1000000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747796020,0.0800,200,1000000.0000,1000000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747797020,0.0800,200,1000000.0000,1000000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747798020,0.0800,200,1000000.0000,1000000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747799020,0.0800,200,1000000.0000,1000000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747800020,0.0800,200,1000000.0000,1000000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747801020,0.0800,200,1000000.0000,1000000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747802020,0.0800,200,1000000.0000,1000000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747803020,0.0800,200,1000000.0000,1000000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747804020,0.0800,200,1000000.0000,980000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747805020,0.0800,200,1000000.0000,980000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747806020,0.0800,200,1000000.0000,980000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747807020,0.0800,200,1000000.0000,980000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747808020,0.0800,200,1000000.0000,980000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747809020,0.0800,200,1000000.0000,980000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747810020,0.0800,200,1000000.0000,980000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747811020,0.0800,200,1000000.0000,980000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747812020,0.0800,200,1000000.0000,980000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747813020,0.0800,200,1000000.0000,980000.0000,false,0.0000,BWE cap: reduced FEC to fit bandwidth,false
+1770747814020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth | FEC enabled: network protection required | adjusted protection factor,true
+1770747815020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747816020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747817020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747818020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747819020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747820020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747821020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747822020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747823020,0.0800,200,1000000.0000,1050000.0000,true,0.0500,BWE cap: reduced FEC to fit bandwidth,false
+1770747824020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth | adjusted protection factor,true
+1770747825020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747826020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747827020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747828020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747829020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747830020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747831020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747832020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
+1770747833020,0.0800,200,1000000.0000,1200000.0000,true,0.2000,BWE cap: reduced FEC to fit bandwidth,false
