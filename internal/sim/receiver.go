@@ -1,45 +1,76 @@
 package sim
 
 import (
-	"context"
 	"time"
 
-	"github.com/pion/interceptor"
 	"github.com/pion/rtp"
 )
 
-func (e *Env) RunReceiver(ctx context.Context) error {
-	buf := make([]byte, 2048) // > MTU, reicht für RTP+Payload
+type Receiver struct {
+	decoder *FlexFEC03Decoder
+	availAt map[uint16]time.Time
 
-	for {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		default:
-		}
+	recvMedia int64
+	recvFEC   int64
+	recovered int64
 
-		n, _, err := e.readB.Read(buf, interceptor.Attributes{})
-		if err != nil {
-			return nil
-		}
+	mediaSSRC uint32
+	fecSSRC   uint32
+	mediaPT   uint8
+	fecPT     uint8
+}
 
-		var pkt rtp.Packet
-		if err := pkt.Unmarshal(buf[:n]); err != nil {
+func NewReceiver(ids RTPIDs) *Receiver {
+	return &Receiver{
+		decoder:   NewFlexFEC03Decoder(ids.FECSSRC, ids.MediaSSRC),
+		availAt:   make(map[uint16]time.Time, 4096),
+		mediaSSRC: ids.MediaSSRC,
+		fecSSRC:   ids.FECSSRC,
+		mediaPT:   ids.MediaPT,
+		fecPT:     ids.FECPT,
+	}
+}
+
+func (r *Receiver) OnPacket(pkt rtp.Packet, at time.Time) {
+	isFEC := (pkt.SSRC == r.fecSSRC) || (pkt.PayloadType == r.fecPT)
+	if isFEC {
+		r.recvFEC++
+	} else {
+		r.recvMedia++
+		r.markAvailable(pkt.SequenceNumber, at)
+	}
+
+	recovered := r.decoder.Push(pkt)
+	for _, rp := range recovered {
+		if rp.SSRC != r.mediaSSRC {
 			continue
 		}
-
-		kind := "media"
-		if pkt.SSRC == e.sc.SSRCFEC || pkt.PayloadType == e.sc.PTFEC {
-			kind = "fec"
-			e.recvFEC.Add(1)
-		} else {
-			kind = "media"
-			e.recvMedia.Add(1)
+		if r.markAvailable(rp.SequenceNumber, at) {
+			r.recovered++
 		}
+	}
+}
 
-		e.log.Packet("rx", kind, time.Now(),
-			pkt.SSRC, pkt.PayloadType, pkt.SequenceNumber, pkt.Timestamp,
-			len(pkt.Payload), false, false,
-		)
+func (r *Receiver) markAvailable(seq uint16, at time.Time) bool {
+	if _, ok := r.availAt[seq]; ok {
+		return false
+	}
+	r.availAt[seq] = at
+	return true
+}
+
+type ReceiverSnapshot struct {
+	RecvMedia int64
+	RecvFEC   int64
+	Recovered int64
+	Unique    int64
+}
+
+func (r *Receiver) Snapshot() ReceiverSnapshot {
+	return ReceiverSnapshot{
+		RecvMedia: r.recvMedia,
+		RecvFEC:   r.recvFEC,
+		Recovered: r.recovered,
+		Unique:    int64(len(r.availAt)),
 	}
 }

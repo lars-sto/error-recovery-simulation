@@ -9,43 +9,93 @@ const (
 	ModeAdaptive Mode = "adaptive_engine"
 )
 
-type NetworkSpec struct {
-	RandomLoss float64 // 0..1
-	// später: burst params, reorder, jitter, rate cap, etc.
+type RTPIDs struct {
+	MediaSSRC uint32
+	FECSSRC   uint32
+	MediaPT   uint8
+	FECPT     uint8
 }
 
-type RunnerConfig struct {
-	OutDir string
+type SenderSpec struct {
+	PacketRateHz  int
+	PayloadBytes  int
+	StartSeq      uint16
+	StartTS       uint32
+	TimestampStep uint32
+	StartTime     time.Time
+}
+
+func (s SenderSpec) Interval() time.Duration {
+	if s.PacketRateHz <= 0 {
+		return 0
+	}
+	return time.Second / time.Duration(s.PacketRateHz)
+}
+
+func (s SenderSpec) MediaBitrateBps(includeRTPHeader bool) float64 {
+	if s.PacketRateHz <= 0 || s.PayloadBytes <= 0 {
+		return 0
+	}
+	bytesPerPkt := float64(s.PayloadBytes)
+	if includeRTPHeader {
+		bytesPerPkt += 12
+	}
+	return bytesPerPkt * 8 * float64(s.PacketRateHz)
+}
+
+type LinkSpec struct {
+	BaseOneWayDelay time.Duration
+	Jitter          time.Duration
+	MaxQueueDelay   time.Duration
+	CapacityBps     *FloatSchedule
+	Loss            LossModel
+	Seed            int64
 }
 
 type Scenario struct {
-	Name string
-
+	Name     string
 	Duration time.Duration
 
-	// Network behavior
-	Loss         LossModel
-	OneWayDelay  time.Duration // optional, later (if vnet supports link delay)
-	RateLimitBps int           // optional, later
+	IDs    RTPIDs
+	Sender SenderSpec
 
-	// Media/FEC identifiers (so logger can classify)
-	SSRCMedia uint32
-	SSRCFEC   uint32
-	PTMedia   uint8
-	PTFEC     uint8
+	K       uint32
+	StaticR uint32
 
-	Mode Mode // StaticFlexFEC or AdaptiveEngine etc.
+	StatsInterval   time.Duration
+	BWE             *FloatSchedule
+	RTTMs           int
+	JitterMs        int
+	PlayoutDeadline time.Duration
+
+	Link LinkSpec
+
+	Seed int64
 }
 
-type LossModel interface {
-	Drop(now time.Time, meta PacketMeta) bool
-	Name() string
+type FloatSchedule struct {
+	Points  []FloatPoint
+	Default float64
 }
 
-type PacketMeta struct {
-	SSRC uint32
-	PT   uint8
-	Seq  uint16
-	TS   uint32
-	Len  int
+type FloatPoint struct {
+	At    time.Duration
+	Value float64
+}
+
+func (s *FloatSchedule) At(t time.Duration) float64 {
+	if s == nil || len(s.Points) == 0 {
+		if s == nil {
+			return 0
+		}
+		return s.Default
+	}
+	v := s.Points[0].Value
+	for i := 0; i < len(s.Points); i++ {
+		if t < s.Points[i].At {
+			break
+		}
+		v = s.Points[i].Value
+	}
+	return v
 }
