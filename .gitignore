@@ -37,3 +37,5 @@ go.work.sum
 
 
 ../adaptive-fec-simulation/simdata/
+out
+results

@@ -29,3 +29,21 @@ Pion FlexFEC Interceptor
 RTP Output
 ```
 
+## Usage
+
+```batch
+go run ./cmd/simulate/batch \
+  -runs 50 \
+  -seed 1 \
+  -out results/summary.csv \
+  -csvdir results/timeseries \
+  -timeseries bwe_bottleneck
+```
+Creates a summary of all runs and detailed time-series 
+
+### Python
+```
+python3 -m venv .venv
+source .venv/bin/activate
+
+```

@@ -16,6 +16,10 @@ type TimeSample struct {
 	TargetBWE  float64
 	MediaRate  float64
 
+	CapacityBps       float64
+	CurrentBitrateBps float64
+	QueueDelayMs      float64
+
 	PolicyEnabled  bool
 	PolicyK        uint32
 	PolicyR        uint32
@@ -54,6 +58,9 @@ func NewCSVRecorder(path string) (*CSVRecorder, error) {
 		"loss_window",
 		"target_bwe_bps",
 		"media_rate_bps",
+		"capacity_bps",
+		"current_bitrate_bps",
+		"queue_delay_ms",
 		"policy_enabled",
 		"policy_k",
 		"policy_r",
@@ -80,6 +87,9 @@ func (r *CSVRecorder) OnSample(s TimeSample) {
 		ff(s.LossWindow),
 		ff(s.TargetBWE),
 		ff(s.MediaRate),
+		ff(s.CapacityBps),
+		ff(s.CurrentBitrateBps),
+		ff(s.QueueDelayMs),
 		strconv.FormatBool(s.PolicyEnabled),
 		strconv.FormatUint(uint64(s.PolicyK), 10),
 		strconv.FormatUint(uint64(s.PolicyR), 10),

@@ -1,9 +1,9 @@
+// cmd/simulate/batch/main.go
 package main
 
 import (
 	"flag"
 	"fmt"
-	"math"
 	"path/filepath"
 	"strings"
 
@@ -12,15 +12,24 @@ import (
 
 func main() {
 	var (
-		seed     = flag.Int64("seed", 1, "base seed")
-		runs     = flag.Int("runs", 1, "repeats per scenario/mode")
-		outDir   = flag.String("out", "", "output directory for per-run CSV time series")
-		writeCSV = flag.Bool("csv", false, "write per-run time series CSV")
-		filter   = flag.String("scenario", "", "scenario name filter (substring)")
+		seed    = flag.Int64("seed", 1, "base seed (run seed = seed + i)")
+		runs    = flag.Int("runs", 30, "repeats per scenario/mode")
+		outPath = flag.String("out", "results/summary.csv", "output summary CSV file")
+		filter  = flag.String("scenario", "", "scenario name filter (substring)")
+		csvDir  = flag.String("csvdir", "", "optional: write per-run time series CSV into this directory (empty disables)")
+		tsOnly  = flag.String("timeseries", "", "optional: comma-separated scenario substrings to write time series for (requires -csvdir)")
 	)
 	flag.Parse()
 
 	scenarios := sim.DefaultScenarios(*seed)
+
+	w, err := sim.NewSummaryCSVWriter(*outPath)
+	if err != nil {
+		panic(err)
+	}
+	defer func() { _ = w.Close() }()
+
+	allowTS := parseCSVList(*tsOnly)
 
 	for _, sc := range scenarios {
 		if *filter != "" && !strings.Contains(sc.Name, *filter) {
@@ -28,70 +37,103 @@ func main() {
 		}
 
 		for _, mode := range []sim.Mode{sim.ModeStatic, sim.ModeAdaptive} {
-			var losses []float64
-			var overhead []float64
-
 			for i := 0; i < *runs; i++ {
 				runSeed := *seed + int64(i)
 
-				var rec sim.Recorder
-				if *writeCSV && *outDir != "" {
-					path := filepath.Join(*outDir, fmt.Sprintf("%s__%s__seed%d.csv", sc.Name, mode, runSeed))
-					r, err := sim.NewCSVRecorder(path)
+				// summary recorder (always)
+				sumRec := sim.NewSummaryRecorder()
+
+				// optional time series CSV recorder
+				var rec sim.Recorder = sumRec
+				if *csvDir != "" && wantTimeseries(sc.Name, allowTS) {
+					path := filepath.Join(*csvDir, fmt.Sprintf("%s__%s__seed%d.csv", sc.Name, mode, runSeed))
+					tsRec, err := sim.NewCSVRecorder(path)
 					if err != nil {
 						panic(err)
 					}
-					rec = r
+					rec = sim.MultiRecorder(sumRec, tsRec)
 				}
 
-				res, err := sim.RunScenario(sc, sim.RunOptions{Mode: mode, Seed: runSeed, Recorder: rec})
+				res, err := sim.RunScenario(sc, sim.RunOptions{
+					Mode:     mode,
+					Seed:     runSeed,
+					Recorder: rec,
+				})
 				if err != nil {
 					panic(err)
 				}
 
-				fmt.Printf("%s | %s | seed=%d | sentMedia=%d sentFEC=%d recvMedia=%d recvFEC=%d recovered=%d unique=%d good=%d loss=%.3f loss_deadline=%.3f oh_bytes=%.3f\n",
-					sc.Name, mode, runSeed,
-					res.SentMediaPkts, res.SentFECPkts,
-					res.RecvMediaPkts, res.RecvFECPkts,
-					res.RecoveredPkts, res.UniquePkts, res.GoodWithinDeadline,
-					res.FinalLossNoDeadline, res.FinalLossDeadline,
-					res.OverheadRatioBytes,
-				)
+				row := sim.SummaryRow{
+					Scenario:   sc.Name,
+					Mode:       mode,
+					Seed:       runSeed,
+					DurationMs: res.Duration.Milliseconds(),
 
-				losses = append(losses, res.FinalLossDeadline)
-				overhead = append(overhead, res.OverheadRatioBytes)
-			}
+					FinalLossDeadline:   res.FinalLossDeadline,
+					FinalLossNoDeadline: res.FinalLossNoDeadline,
 
-			if len(losses) > 1 {
-				fmt.Printf("%s | %s | mean_loss_deadline=%.3f std=%.3f | mean_oh_bytes=%.3f\n",
-					sc.Name, mode, mean(losses), stddev(losses), mean(overhead),
-				)
+					OverheadRatioBytes: res.OverheadRatioBytes,
+					OverheadRatioPkts:  res.OverheadRatioPkts,
+
+					MeanQueueDelayMs: sumRec.MeanQueueDelayMs(),
+
+					MeanPolicyR:        sumRec.MeanPolicyR(),
+					MaxPolicyR:         sumRec.MaxPolicyR(),
+					MeanPolicyOverhead: sumRec.MeanPolicyOverhead(),
+
+					MeanLossWindow: sumRec.MeanLossWindow(),
+					MaxLossWindow:  sumRec.MaxLossWindow(),
+
+					SentMediaPkts: res.SentMediaPkts,
+					SentFECPkts:   res.SentFECPkts,
+					DroppedMedia:  res.DroppedMediaPkts,
+					DroppedFEC:    res.DroppedFECPkts,
+					QueueDrops:    res.DroppedQueuePkts,
+					WireDrops:     res.DroppedWirePkts,
+
+					RecoveredPkts:      res.RecoveredPkts,
+					UniquePkts:         res.UniquePkts,
+					GoodWithinDeadline: res.GoodWithinDeadline,
+				}
+
+				if err := w.WriteRow(row); err != nil {
+					panic(err)
+				}
 			}
 		}
 	}
+
+	// ensure flushed
+	if err := w.Close(); err != nil {
+		panic(err)
+	}
 }
 
-func mean(xs []float64) float64 {
-	if len(xs) == 0 {
-		return 0
+func parseCSVList(s string) []string {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return nil
 	}
-	s := 0.0
-	for _, x := range xs {
-		s += x
+	parts := strings.Split(s, ",")
+	out := make([]string, 0, len(parts))
+	for _, p := range parts {
+		p = strings.TrimSpace(p)
+		if p != "" {
+			out = append(out, p)
+		}
 	}
-	return s / float64(len(xs))
+	return out
 }
 
-func stddev(xs []float64) float64 {
-	if len(xs) < 2 {
-		return 0
+func wantTimeseries(name string, allow []string) bool {
+	// empty allowlist => never write timeseries
+	if len(allow) == 0 {
+		return false
 	}
-	m := mean(xs)
-	v := 0.0
-	for _, x := range xs {
-		d := x - m
-		v += d * d
+	for _, sub := range allow {
+		if strings.Contains(name, sub) {
+			return true
+		}
 	}
-	v /= float64(len(xs) - 1)
-	return math.Sqrt(v)
+	return false
 }

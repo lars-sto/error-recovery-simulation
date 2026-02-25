@@ -261,6 +261,11 @@ func RunScenario(sc Scenario, opt RunOptions) (RunResult, error) {
 				targetBWE = sc.BWE.At(elapsed)
 			}
 
+			capBps := 0.0
+			if sc.Link.CapacityBps != nil {
+				capBps = sc.Link.CapacityBps.At(elapsed)
+			}
+
 			// Current bitrate: bytes sent in window / window duration
 			winSec := statsEvery.Seconds()
 			currentBps := 0.0
@@ -282,23 +287,31 @@ func RunScenario(sc Scenario, opt RunOptions) (RunResult, error) {
 				<-observer.processed
 			}
 
+			queueDelay := 0.0
+			if link.nextAvail.After(now) {
+				queueDelay = float64(link.nextAvail.Sub(now).Milliseconds())
+			}
+
 			// Recorder sample (always)
 			if opt.Recorder != nil {
 				opt.Recorder.OnSample(TimeSample{
-					T:              elapsed,
-					LossWindow:     loss,
-					TargetBWE:      targetBWE,
-					MediaRate:      sc.Sender.MediaBitrateBps(true),
-					PolicyEnabled:  polEnabled,
-					PolicyK:        polK,
-					PolicyR:        polR,
-					PolicyOverhead: polOver,
-					SentMedia:      sentMediaPkts,
-					SentFEC:        sentFECPkts,
-					DroppedMedia:   droppedMediaPkts,
-					DroppedFEC:     droppedFECPkts,
-					QueueDrops:     droppedQueuePkts,
-					WireDrops:      droppedWirePkts,
+					T:                 elapsed,
+					LossWindow:        loss,
+					TargetBWE:         targetBWE,
+					MediaRate:         sc.Sender.MediaBitrateBps(true),
+					CapacityBps:       capBps,
+					CurrentBitrateBps: currentBps,
+					QueueDelayMs:      queueDelay,
+					PolicyEnabled:     polEnabled,
+					PolicyK:           polK,
+					PolicyR:           polR,
+					PolicyOverhead:    polOver,
+					SentMedia:         sentMediaPkts,
+					SentFEC:           sentFECPkts,
+					DroppedMedia:      droppedMediaPkts,
+					DroppedFEC:        droppedFECPkts,
+					QueueDrops:        droppedQueuePkts,
+					WireDrops:         droppedWirePkts,
 				})
 			}
 
